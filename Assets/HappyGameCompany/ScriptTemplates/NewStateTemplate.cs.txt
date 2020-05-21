@@ -1,0 +1,78 @@
+using System;
+using UnityEngine;
+
+public class #SCRIPTNAME# : IState {
+    
+    #ONENTER#public delegate void Enter#NAME#();#ONENTER#
+    #ONEXECUTE#public delegate void Execute#NAME#();#ONEXECUTE#
+    #ONEXIT#public delegate void Exit#NAME#();#ONEXIT#
+    
+    #ONPLAYERINPUT#public delegate void PlayerInput();#ONPLAYERINPUT#
+  
+    #ONENTER#public static event Enter#NAME# OnEnter#NAME#Event;#ONENTER#
+ 
+    #ONEXECUTE#public static event Execute#NAME# OnExecute#NAME#Event;#ONEXECUTE#
+
+    #ONEXIT#public static event Exit#NAME# OnExit#NAME#Event;#ONEXIT#
+    
+    #ONPLAYERINPUT#public static event PlayerInput OnPlayerInputEvent;#ONPLAYERINPUT#
+    
+    public void OnEnter() {
+        Debug.Log(GetType().Name + ".OnEnter");
+        
+        #ONPLAYERINPUT#PlayerInputController.OnPlayerInputEvent += TriggerPlayerInput;#ONPLAYERINPUT#
+        
+        #ONENTER#try {
+            if (OnEnter#NAME#Event != null)
+                OnEnter#NAME#Event.Invoke();
+            else
+                EventExtension.ThrowMessage(nameof(OnEnter#NAME#Event));
+        }
+        catch (Exception e) {
+            EventExtension.PrintError(e);
+        }#ONENTER#    
+    }
+      
+    public void OnExecute() {
+        Debug.Log(GetType().Name + ".OnExecute");
+        
+        #ONEXECUTE#try {
+            if (OnExecute#NAME#Event != null)
+                OnExecute#NAME#Event.Invoke();
+            else
+                EventExtension.ThrowMessage(nameof(OnExecute#NAME#Event));
+        }
+        catch (Exception e) {
+            EventExtension.PrintError(e);
+        }#ONEXECUTE#      
+    }
+    
+    public void OnExit() {
+        Debug.Log(GetType().Name + ".OnExit");
+        
+        #ONPLAYERINPUT#PlayerInputController.OnPlayerInputEvent -= TriggerPlayerInput;#ONPLAYERINPUT#
+        
+        #ONEXIT#try {
+            if (OnExit#NAME#Event != null)
+                OnExit#NAME#Event.Invoke();
+            else
+                EventExtension.ThrowMessage(nameof(OnExit#NAME#Event));
+        }
+        catch (Exception e) {
+            EventExtension.PrintError(e);
+        }#ONEXIT#  
+    }
+       
+    #ONPLAYERINPUT#private static void TriggerPlayerInput() {
+        Debug.Log("Encapsulate Player Input Trigger.");
+        try {
+            if (OnPlayerInputEvent != null)
+                OnPlayerInputEvent.Invoke();
+            else
+                EventExtension.ThrowMessage(nameof(OnPlayerInputEvent));
+        }
+        catch (Exception e) {
+            EventExtension.PrintError(e);
+        }
+    }#ONPLAYERINPUT#    
+}
